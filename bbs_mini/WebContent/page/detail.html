@@ -1,0 +1,142 @@
+<!DOCTYPE html >
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>回复</title>
+		<link rel="stylesheet" href="../css/bootstrap.css" />
+		<script type="text/javascript" src="../js/jquery-3.1.1.js"></script>
+		<script type="text/javascript" src="../js/vue.min.js"></script>
+		<script type="text/javascript" src="../js/bbs/app.js"></script>
+		<script type="text/javascript" src="../js/bbs/detail.js"></script>
+		<style>
+			* {
+				font-family: "宋体";
+				font-size: 16px;
+			}
+			
+			#titleFont {
+				font-size: 20px;
+			}
+			
+			table {
+				border: 1px solid #abc4e4;
+			}
+			
+			td {
+				border: 1px solid #abc4e4;
+				padding: 5px;
+			}
+			
+			ul li {
+				list-style-type: none;
+				line-height: 25px;
+				padding: 0px 10px;
+			}
+			
+		</style>
+
+	</head>
+
+	<body>
+		
+		<div id='detail_data' class="mainDiv" style="margin-top: 50px;margin-bottom: 50px;margin-left: 100px;margin-right: 100px;">
+			<a class="navbar-brand" href="javascript:void(0)" @click='indexLogo'>论坛首页</a>
+			<table width="100%" height="161" border="0" cellpadding="0" cellspacing="0" id="tbBorder">
+				<tr bgcolor="#abc4e4">
+					<td height="25" colspan="3" align="left"><span id="titleFont"><b>主题：</b></span>
+						<span id="titleFont"><b>{{msgVo.msgtopic}}</b></span></td>
+				</tr>
+				<tr>
+					<td width="160" rowspan="3" align="left" valign="top">
+						<p>作者信息</p>
+						<ul>
+							<li>{{msgVo.username}}</li>
+							<li>{{msgVo.city}}</li>
+							<li>{{msgVo.createtime}}</li>
+						</ul>
+					</td>
+					<td width="600" height="21">发表时间：{{msgVo.msgtime}}</td>
+					<td width="66" align="right">#楼主</td>
+				</tr>
+				<tr>
+					<td height="77" colspan="2" align="left" valign="top">{{msgVo.msgcontents}}</td>
+				</tr>
+				<tr>
+					<td height="18" colspan="2" align="right" valign="top">
+						<a href="#reply">回复</a>
+					</td>
+				</tr>
+			</table>
+			<br>
+			
+			<!-- 回复信息  -->
+			<table v-for='(reply,index) in replyVos' width="100%" height="154" border="0" cellpadding="0" cellspacing="0" id="tbBorder">
+				<tr>
+					<td width="160" rowspan="4" align="left" valign="top">
+						<p>回帖信息</p>
+						<ul>
+							<li>{{reply.username}}</li>
+							<li>{{reply.city}}</li>
+							<li>{{reply.createtime}}</li>
+						</ul>
+					</td>
+					<td width="583" height="23">回复时间：{{reply.replytime}}</td>
+					<td width="70" align="right">#{{index + 1}}楼</td>
+				</tr>
+				<tr>
+					<td height="102" colspan="2" align="left" valign="top">{{reply.replycontents}}</td>
+				</tr>
+				<tr>
+					<td height="21" colspan="2" align="right" valign="top">
+						<a href="#">回复</a>
+					</td>
+				</tr>
+			</table>
+			<br>
+
+			<!-- --------------------------  -->
+
+			<!--获取session 判断是否是登录用户-->
+
+			<table width="100%" height="30" border="0" cellpadding="0" cellspacing="0">
+				<tr bgcolor="#abc4e4">
+					<td height="23">欢迎你 &nbsp;&nbsp;{{loginUser.username}} |&nbsp;&nbsp;
+						<a href="javascript:void(0);" @click='loginOutDetail'>退出登录</a>
+					</td>
+				</tr>
+			</table>
+
+			<form id="reply" name="reply" method="post" action="<%=ctx%>/reply_addReply" onsubmit='return false'>
+				<table width="100%" border="0" cellpadding="0" cellspacing="0" id="tbBorder">
+					<tr>
+						<td><label> <input type="hidden"
+							name="reply.message.msgid" value="${message.msgid }" />
+					</label></td>
+					</tr>
+					<tr>
+						<td><label> <textarea v-model='replycontents' name="reply.replycontents"
+								cols="80" rows="10"></textarea>
+					</label></td>
+					</tr>
+					<tr>
+						<td><label> <input @click='addDetail' type="button" name="submit"
+							value="发表回复" /><a name="reply"></a>
+					</label></td>
+					</tr>
+				</table>
+
+			</form>
+			<!--
+		<table width="100%" height="30" border="0" cellpadding="0"
+			cellspacing="0">
+			<tr bgcolor="#abc4e4">
+				<td height="27">本论坛回复需要登录&nbsp; |&nbsp;&nbsp;&nbsp; <a
+					href="<%=ctx%>/login">登录</a>&nbsp;&nbsp; |&nbsp;&nbsp;<a
+					href="<%=ctx%>/register.jsp">新用户注册</a></td>
+			</tr>
+		</table>-->
+		</div>
+	</body>
+
+</html>

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="css/bootstrap.css">
+<link rel="stylesheet" href="css/myPagination.css">
+<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>
+<script type="text/javascript" src="js/vue.js"></script>
+<script type="text/javascript" src="js/myPagination.js"></script>
+<script src="js/bootstrap.js"></script>
+<style type="text/css">
+	#user{
+		width: 750px;
+		margin: 50px auto;
+	}
+	table{
+		text-align: center;
+	}
+	table td{
+		padding: 10px 20px;
+	}
+</style>
+</head>
+<body>
+	<div id="user">
+		<!-- 查询区 -->
+		<form>
+			姓名：<input type="text" v-model.trim="username">
+			 性别：<select v-model="sex">
+					<option value="">请选择</option>
+					<option value="男">男</option>
+					<option value="女">女</option>
+				</select> <input type="button" value="搜索" onclick="getUsers();">
+		</form>
+		
+		<!-- 添加用户 -->
+		<button style="float: right" type="button" class="btn btn-success" @click="userAdd">添加用户</button>
+		
+		<!-- 列表区 -->
+		<table>
+			<tr>
+				<td>id</td>
+				<td>姓名</td>
+				<td>生日</td>
+				<td>性别</td>
+				<td>地址</td>
+				<td>操作</td>
+				<!--批量删除按钮-->
+				<td><button @click="userDeleteS">批量删除</button></td>
+			</tr>
+			<tr v-for="user in users">
+				<td>{{user.id}}</td>
+				<td>{{user.username}}</td>
+				<td>{{user.birthday}}</td>
+				<td>{{user.sex}}</td>
+				<td>{{user.address}}</td>
+				<td><button type="button" class="btn btn-danger" @click="del(user.id)">删除</button></td>
+				<!--批量删除多选择框-->
+				<td><input v-model="checked" :value="user.id" type="checkbox"></td>{{checked}}
+			</tr>
+		</table>
+		
+		<!-- 分页区 -->
+		<div id="pagination" class="pagination"></div>
+	</div>
+
+</body>
+<script type="text/javascript">
+	var path = "http://localhost:8080/20181207/";
+	
+	// 页码,并赋值初始值为第一页
+	var pageNum = 1;
+	// 页容量
+	var pageSize = 5;
+	// 一共多少页
+	var pages;
+	// 一共多少条记录
+	var total;
+
+	var vm;
+	//预加载
+	$(function() {
+		// vue初始化
+		vm = new Vue({
+			el : "#user",
+			data : {
+				username : '',
+				sex : '',
+				users : [],//用户列表
+					
+				// 批量删除多选框
+                checked:[]
+			},
+			methods:{
+				// 删除用户
+                del:function(obj){
+                    if (confirm("您确定要删除此用户吗?")) {
+                        userDelete(obj);
+					}
+				},
+				
+				// 添加用户页面跳转
+				userAdd:function(){
+					window.location.href = path + "addUpdate.html";
+				},
+
+				// 批量删除用户
+                userDeleteS:function(){
+                    // 批量删除
+                    userDeleteS(this.checked);
+				}
+			}
+		});
+		
+		// 调用查询用户列表的方法
+		getUsers();
+		// 分页信息方法
+		createPage();
+	});
+
+	function getUsers() {
+		// ajax异步请求不会等待上一个请求,所以底下的"创建分页信息方法"获取不到值
+		$.ajax({
+			url : path + "UserServlet",//请求的地址url,为字符串
+			// 请求类型
+			type: "get",
+			data : {
+				username : vm.username,
+				sex : vm.sex,
+				
+				// 页码
+				pageNum:pageNum,
+				
+				// 页容量
+				pageSize:pageSize
+				
+			}, //请求的数据
+			dataType : "json", //数据类型
+			
+			async:false, // 是否异步,默认是true
+			
+			success : function(data) { //请求成功后的 调用方法     data:是返回的数据信息
+				vm.users = data.page.data;
+				
+				// 一共多少页
+				pages = data.page.totalPage;
+				
+				// 记录数
+				total = data.page.rows;
+			}
+		})
+	}
+	
+	// 创建分页信息方法
+	function createPage(){
+		new Page({
+		    id: 'pagination',
+		    curPage: 1, //初始页码
+		    pageTotal: pages, //总页数
+		    pageAmount: pageSize, //每页多少条
+		    dataTotal: total, //总共多少条数据
+		    pageSize: 5, //可选,分页个数
+		    showPageTotalFlag: true, //是否显示数据统计
+		    showSkipInputFlag: true, //是否支持跳转
+		    getPage: function(page) {
+		        //获取当前页数
+		        //console.log(page);
+		        
+		        // 回调
+		        // 给请求的页面赋值
+		    	pageNum = page;
+		        // 调用查询用户的方法
+		    	getUsers();
+		    }
+		})
+	}
+	
+	
+	// 删除用户
+	function userDelete(obj){
+	    $.ajax({
+	    	// 请求地址
+			url:path + "UserServlet?action=userDelete",
+			// 请求类型
+			type:"post",
+			// 请求数据
+			data:{
+			    "userDeleteById":obj
+			},
+			// 响应类型
+			dataType:"json",
+			// 响应数据
+			success:function(data){
+			    if (data.result > 0) {
+			        alert("删除成功");
+			        // 回调重新查询用户列表
+			        getUsers();
+				} else {
+			        alert("删除失败");
+				}
+			}
+		})
+	}
+	
+	// 批量删除
+	function userDeleteS(obj){
+		// 将Vue对象转换为数组
+		var userDeleteSId = obj + "";
+	
+	    $.ajax({
+			// 请求批量删除地址
+			url:path + "UserServlet?action=userDeleteS",
+			// 请求类型
+			type:"post",
+			// 请求数据
+			data:{
+                "userDeleteSId":userDeleteSId
+			},
+			// 响应类型
+			dataType:"json",
+			// 响应数据
+			success:function (data) {
+				if (data.result > 0) {
+				    alert("批量删除成功");
+				    // 回调查询用户列表方法
+                    getUsers();
+				} else {
+                    alert("批量删除失败");
+				}
+            }
+		})
+	}
+</script>
+
+</html>

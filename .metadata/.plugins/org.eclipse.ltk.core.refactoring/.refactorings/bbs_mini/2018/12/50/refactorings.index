@@ -1,0 +1,23 @@
+1544509250324	Delete element
+1544512975621	Rename package 'com.hpe.base'
+1544512980456	Rename package 'com.hpe.service.impl'
+1544519267663	Rename type 'RegService'
+1544519543829	Delete elements
+1544575237845	Copy compilation unit
+1544575241254	Delete element
+1544575254301	Copy compilation unit
+1544575258038	Delete element
+1544630961649	Delete element
+1544631018784	Rename type 'IndeDaoImpl'
+1544631336152	Rename type 'IndexCount'
+1544669423940	Rename type 'MessageDto'
+1544671060451	Delete element
+1544671126446	Move compilation units
+1544683917055	Rename type 'Index'
+1544683928190	Rename type 'IndexOver'
+1544689664526	Rename type 'OverIndex'
+1544691438072	Delete element
+1544691662466	Delete element
+1544692378679	Delete element
+1544693318553	Delete element
+1544752184036	Rename type 'ReplyService'

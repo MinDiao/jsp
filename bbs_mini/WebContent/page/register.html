@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<head>
+<meta charset="UTF-8" />
+<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">  -->
+<title>Login and Registration</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description"
+	content="Login and Registration Form with HTML5 and CSS3" />
+<meta name="keywords"
+	content="html5, css3, form, switch, animation, :target, pseudo-class" />
+<meta name="author" content="Codrops" />
+<link rel="stylesheet" type="text/css" href="../css/demo.css" />
+<link rel="stylesheet" type="text/css" href="../css/style.css" />
+<link rel="stylesheet" type="text/css"
+	href="../css/animate-custom.css" />
+<script type="text/javascript" src="../js/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../js/vue.min.js"></script>
+<script type="text/javascript" src="../js/bbs/app.js"></script>
+<script type="text/javascript" src="../js/bbs/register.js"></script>
+</head>
+<body>
+	<div class="container">
+		<!-- Codrops top bar -->
+		<div class="codrops-top">
+			<div class="clr"></div>
+		</div> 
+		<!--/ Codrops top bar -->
+		<header>
+			<h1>Login and Registration Form</h1>
+			<nav class="codrops-demos">
+				<span></span>
+
+			</nav>
+		</header>
+		<section>
+			<div id="container_demo">
+				<a class="hiddenanchor" id="toregister"></a> <a class="hiddenanchor"
+					id="tologin"></a>
+				<div align="center" id='register_data'>
+					<form name="form1" method="post" action="../"> <!-- 1.如果button非要使用submit则 onsubmit='return false'
+																		2.return check() -->
+						<table width="50%" border="0" cellspacing="1" cellpadding="0">
+							<tr>
+								<td width="20%">用户名：</td>
+								<td width="50%"><label> <input type="text" required="required" placeholder="请输入用户名"
+										 id="username" v-model='username' @blur='checkUser' />
+								</label>
+									<span id="username_check" style="color: red">{{username_check}}</span>
+								</td>
+								<td width="30%"><div id="username_error"></div></td>
+							</tr>
+							<tr>
+								<td>密码：</td>
+								<td><label> <input type="password"  required="required" placeholder="请输入密码"
+										  id="password" v-model='password' />
+								</label></td>
+								<td><div id="password_error"></div></td>
+							</tr>
+							<tr>
+								<td>性别：</td>
+								<td><input type="radio"  value="男" v-model='sex' />男
+									<input type="radio"  value="女" v-model='sex' />女</td>
+							</tr>
+							<tr>
+								<td>个人爱好：</td>
+								<td>
+									<label><input type="checkbox" value="文学" v-model='hobbys' /> 文学 </label>
+									<label><input type="checkbox" value="影视" v-model='hobbys' /> 影视 </label>
+									<label><input type="checkbox" value="音乐" v-model='hobbys' /> 音乐 </label>
+									<label><input type="checkbox" value="体育" v-model='hobbys' /> 体育 </label>
+								</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<td>出生日期：</td>
+								<td><label> <input  type="date" 
+										id="birthday" v-model='birthday' />
+								</label></td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<td>所在城市</td>
+								<td><label> <select id="city"  v-model='city'>
+											<option value="济南">济南</option>
+											<option value="青岛">青岛</option>
+											<option value="威海">威海</option>
+											<option value="烟台">烟台</option>
+											<option value="临沂">临沂</option>
+											<option value="日照">日照</option>
+											<option value="淄博">淄博</option>
+											<option value="潍坊">潍坊</option>
+											<option value="莱芜">莱芜</option>
+											<option value="泰安">泰安</option>
+											<option value="济宁">济宁</option>
+											<option value="菏泽">菏泽</option>
+											<option value="东营">东营</option>
+											<option value="德州">德州</option>
+											<option value="聊城">聊城</option>
+											<option value="滨州">滨州</option>
+											<option value="枣庄">枣庄</option>
+									</select>
+								</label></td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<td>电子邮件</td>
+								<td><label> <input type="text"    
+										id="email" v-model='my_email' />
+								</label></td>
+								<td><div id="email_error"></div></td>
+							</tr>
+							<tr>
+								<td>QQ:</td>
+								<td><label> <input type="text"    
+										id="qq" v-model='my_qq' />
+								</label></td>
+								<td><div id="qq_error"></div></td>
+							</tr>
+							<tr>
+								<td colspan="3"><label> <input type="button"
+										name="button" id="button" value="提交" @click='register'> <input
+										type="reset" name="button2" id="button2" value="重置">
+								</label></td>
+							</tr>
+						</table>
+					</form>
+					
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加 / 删除</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery-3.1.1.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/vue.js"></script>
+    <style>
+        #app{
+            width: 500px;
+            margin: 50px auto 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <form>
+            <!--用户名-->
+            <div class="form-group">
+                <label for="un">请输入用户名:</label>
+                <input v-model.trim="username" type="text" class="form-control" id="un" placeholder="请输入用户名">
+                {{username}}
+            </div>
+
+            <!--性别-->
+            <div class="radio">
+                <label>
+                    <input v-model="selected" type="radio" name="optionsRadios" id="optionsRadios1" value="man">
+                   	男
+                </label>
+                <label>
+                    <input v-model="selected" type="radio" name="optionsRadios" id="optionsRadios2" value="woman">
+                   	 女
+                </label>
+                {{selected}}
+            </div>
+
+            <!--地址-->
+            <div class="form-group">
+                <select v-model="cityId" @change="queryAreas">
+                    <option v-for="city in citys" :value="city.cityId">{{city.cityName}}</option>
+                </select>
+                {{cityId}}
+
+                <!--地址双向联络-->
+                <select v-model="areaId">
+                    <option v-for="area in areas" :value="area.id">{{area.name}}</option>
+                </select>
+                {{areaId}}
+            </div>
+
+            <!--生日-->
+            <div class="form-group">
+                <input v-model="userBirthday" type="date">{{userBirthday}}
+            </div>
+
+            <button type="submit" class="btn btn-info">Submit</button>
+        </form>
+    </div>
+
+    <script>
+    	var path = "http://localhost:8080/20181207/";
+    	var vm;
+    	
+        $(function(){
+        	vm = new Vue({
+	            el:'#app',
+	            data:{
+	                // 用户名
+	                username:'',
+	
+	                // 性别
+	                selected:'',
+	
+	                // 地址
+	                citys:[],
+	                cityId:2,
+	
+	                // 地址双向联络
+	                areas:[],
+	                areaId:201,
+	
+	                // 生日
+	                userBirthday:''
+	            },
+	
+	            methods:{
+	                // 地址双向联络
+	                queryAreas:function () {
+	                    // 模拟后台响应回来数据，判断城市
+	                    if (this.cityId == 1) {
+	                        this.areas = [
+	                            {id:100, name:'任城区1'},
+	                            {id:101, name:'市中区1'},
+	                            {id:102, name:'高新区1'}
+	                        ]
+	
+	                    } else if (this.cityId == 2) {
+	                        this.areas = [
+	                            {id:200, name:'任城区2'},
+	                            {id:201, name:'市中区2'},
+	                            {id:202, name:'高新区2'}
+	                        ]
+	
+	                    } else if (this.cityId == 3) {
+	                        this.areas = [
+	                            {id:300, name:'任城区3'},
+	                            {id:301, name:'市中区3'},
+	                            {id:302, name:'高新区3'}
+	                        ]
+	                    }
+	                }
+	            }
+        	});
+        	
+        	// 调用查询所有城市ajax
+        	citySelectAll();
+        	// 双向联络
+        	vm.queryAreas();
+        })
+        
+        // 查询城市ajax
+        function citySelectAll(){
+        	$.ajax({
+        		// 请求url
+        		url:path + "UserServlet?action=citySelectAll",
+        		// 请求方式
+        		type:"post",
+        		// 响应类型
+        		dataType:"json",
+        		// 响应数据
+        		success:function(data){
+        			vm.citys = data.citys;
+        		}
+        	})
+        }
+        
+        // 添加用户
+        function userAdd(){
+        	$.ajax({
+        		// 请求url
+        		url:path + "UserServlet?action=userAdd",
+        		// 请求方式
+        		type:"post",
+        		// 请求数据
+        		data:{
+        			"username":vm.username,
+        			"selected":vm.selected,
+        			"cityId":vm.cityId,
+        			"areaId":vm.areaId,
+        			"userBirthday":vm.userBirthday
+        		},
+        		// 响应类型
+        		dataType:"json",
+        		// 响应数据
+        		success:function(data){
+        			// 判断是否添加成功
+        			if (data.result > 0) {
+						alert("添加成功");
+					} else {
+						alert("添加失败");
+					}
+        		}
+        	})
+        }
+
+    </script>
+</body>
+</html>

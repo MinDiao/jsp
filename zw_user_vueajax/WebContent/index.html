@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no,
+          initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="js/jquery-3.1.1.min.js"></script>
+    <script src="js/vue.min.js"></script>
+    <title>用户列表</title>
+    <style>
+    	#user{
+    		margin-top: 2%;
+    	}
+        table{
+        	margin: 1% auto 0;
+        	text-align: center;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <div id="user">
+    	<form style="text-align: center">
+            <input type="text" name="username" placeholder="输入模糊姓名">
+            <select name="userSex" id="userSex">
+                <option value="男">男</option>
+                <option value="女">女</option>
+            </select>
+            <input type="button" class="btn1" value="模糊查询">
+        </form>
+        
+        <table border="1">
+            <thead>
+            	<tr>
+	                <th>id</th>
+	                <th>姓名</th>
+	                <th>生日</th>
+	                <th>性别</th>
+	                <th>地址</th>
+            	</tr>
+            </thead>
+            <tbody>
+            	<tr v-for="user in users">
+	                <td>{{user.id}}</td>
+	                <td>{{user.username}}</td>
+	                <td>{{user.birthday}}</td>
+	                <td>{{user.sex}}</td>
+	                <td>{{user.address}}</td>
+            	</tr>
+            </tbody>
+        </table>
+    </div>
+
+    
+    <script>
+        var path = "http://localhost:8080/zw_user_vueajax/";
+        // 预加载成为全局变量
+        var vm;
+        
+        //jq
+        $(function(){
+        	
+        	// 所有用户列表渲染到tbody
+        	userList();
+        	
+        	// 列表渲染
+            vm = new Vue({
+                el:"#user",
+                data:{
+                    users:[]
+                }
+            });
+        	
+        	
+            // 用户姓名模糊查询
+            $(".btn1").click(function(){
+            	
+            	// 清空tbody
+            	//$("tbody").html("");
+            	// 根据模糊用户姓名将用户列表渲染到tbody
+            	userName();
+            	
+            	// 列表渲染
+                vm = new Vue({
+                    el:"#user",
+                    data:{
+                        users:[]
+                    }
+                });
+            });
+            
+            
+            
+            
+			
+        });
+        
+        // 用户列表ajax
+        function userList(){
+        	
+            $.ajax({
+                // 请求地址
+                url:path+"user?action=userList",
+                // 请求方式
+                type:"get",
+                // 服务器返回方式
+                dataType:"json",
+                // 服务器响应
+                success:function (data) {
+                    vm.users = data.users;
+                }
+            });
+        };
+        
+       	// 根据姓名模糊查询
+       	function userName(){
+       		
+       		$.ajax({
+       			// 请求地址
+       			url:path+"user?action=userListByNameSex",
+       			// 请求方式
+    			type:"post",
+    			// 请求数据
+       			data:{
+       				"userName":$("input[name='username']").val(),
+       				"userSex":$("#userSex").val()
+       			},
+       			// 响应格式
+       			dataType:"json",
+       			// 响应内容
+       			success:function(data){
+       				vm.users = data.users;
+       			}
+       		});
+       	};
+       	
+    </script>
+</body>
+</html>

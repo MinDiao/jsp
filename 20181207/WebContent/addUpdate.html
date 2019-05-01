@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加 / 删除</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <script src="js/jquery-3.1.1.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/vue.js"></script>
+    <style>
+        #app{
+            width: 500px;
+            margin: 50px auto 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <form>
+            <!--用户名-->
+            <div class="form-group">
+                <label for="un">请输入用户名:</label>
+                <input v-model.trim="username" type="text" class="form-control" id="un" placeholder="请输入用户名">
+            </div>
+            
+            <!--地址-->
+            <div class="form-group">
+                <label for="ad">请输入地址:</label>
+                <input v-model.trim="address" type="text" class="form-control" id="ad" placeholder="请输入地址">
+            </div>
+
+            <!--性别-->
+            <div class="radio">
+                <label>
+                    <input v-model="selected" type="radio" name="optionsRadios" id="optionsRadios1" value="男">
+                   	男
+                </label>
+                <label>
+                    <input v-model="selected" type="radio" name="optionsRadios" id="optionsRadios2" value="女">
+                   	 女
+                </label>
+            </div>
+			
+            <!--生日-->
+            <div class="form-group">
+                <input v-model="userBirthday" type="date">
+            </div>
+			
+			<!-- 添加按钮 -->
+            <button @click="userAdd" type="button" class="btn btn-info btn-lg">添加</button>
+        </form>
+    </div>
+
+    <script>
+    	var path = "http://localhost:8080/20181207/";
+    	var vm;
+    	
+        $(function(){
+        	vm = new Vue({
+	            el:'#app',
+	            data:{
+	                // 用户名
+	                username:'',
+	
+	                // 性别
+	                selected:'',
+	
+	                // 地址
+	                address:'',
+	
+	                // 生日
+	                userBirthday:''
+	            },
+	            methods:{
+	            	// 添加用户
+	            	userAdd:function(){
+	            		// 添加ajax方法
+	            		userAdd();
+	            	}
+	            }
+           	});
+    	});
+        	
+        // 查询城市ajax
+        /* function citySelectAll(){
+        	$.ajax({
+        		// 请求url
+        		url:path + "UserServlet?action=citySelectAll",
+        		// 请求方式
+        		type:"post",
+        		// 响应类型
+        		dataType:"json",
+        		// 响应数据
+        		success:function(data){
+        			vm.citys = data.citys;
+        		}
+        	})
+        } */
+        
+        // 添加用户
+        function userAdd(){
+        	$.ajax({
+        		// 请求url
+        		url:path + "UserServlet?action=userAdd",
+        		// 请求方式
+        		type:"post",
+        		// 请求数据
+        		data:{
+        			"username":vm.username,
+        			"sex":vm.selected,
+        			"address":vm.address,
+        			"userBirthday":vm.userBirthday
+        		},
+        		// 响应类型
+        		dataType:"json",
+        		// 响应数据
+        		success:function(data){
+        			// 判断是否添加成功
+        			if (data.result > 0) {
+						alert("添加成功");
+						// 回调用户列表页面
+						window.location.href = path + "index.html";
+					} else {
+						alert("添加失败");
+					}
+        		}
+        	})
+        }
+
+    </script>
+</body>
+</html>

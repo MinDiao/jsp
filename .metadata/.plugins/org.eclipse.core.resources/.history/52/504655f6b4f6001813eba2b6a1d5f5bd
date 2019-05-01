@@ -1,0 +1,111 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%
+	String path = request.getContextPath();
+	String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+			+ path + "/";
+%>
+<!doctype html>
+<html lang="zh">
+<head>
+	<base href="<%=basePath%>">
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>员工列表</title>
+    <link rel="stylesheet" href="css/empList.css">
+    <style type="text/css">
+    	table {
+		  margin: auto;
+		  border-collapse: collapse;
+		  text-align: center;
+		}
+		table tr + tr {
+		  border-top: 1px solid #ccc;
+		}
+		table th,td {
+		  width: 4.6875rem;
+		  height: 2.34375rem;
+		}
+    </style>
+    <script type="text/javascript" src="${pageContext.servletContext.contextPath }/js/jquery-3.1.1.js"></script>
+    <script type="text/javascript">
+    	window.onload = function(){
+    		empListJQ();
+    	}
+    	function empListJQ(){
+    		$(function(){
+    			$("tbody").html("");
+       			$.get(
+           				"${pageContext.request.contextPath}/emp?action=empServletAll",
+           				function(data){
+           					$.each(data.result, function(index, items){
+           						let $tr = $("<tr></tr>");
+           						let $empName = $("<td>"+ items.empName +"</td>");
+           						let $empBirthday = $("<td>"+ items.empBirthday +"</td>");
+           						let $empphone = $("<td>"+ items.empphone +"</td>");
+           						let $deptName = $("<td>"+ items.deptName +"</td>");
+           						let $button = $('<td>'+
+           								 '<button type="button" onclick="empUpdate('+ items.empID +')">修改</button>'+
+           				                 '<button type="button" onclick="empDelete('+ items.empID +')">删除</button>'+
+           								 '</td>');
+           						$tr.append($empName);
+           						$tr.append($empBirthday);
+           						$tr.append($empphone);
+           						$tr.append($deptName);
+           						$tr.append($button);
+           						$("tbody").append($tr);
+           					})
+        				},
+        				"json"
+           		);
+    		});
+    	};
+    	
+    	
+    	function empDelete(empID){
+			if (confirm("您确定要删除此员工吗?")) {
+				$(function(){
+					$.post(
+	    					"${pageContext.request.contextPath}/emp?action=empDelete&empID="+empID,
+	    					{
+	    						"empID":empID
+	    					},
+	    					function(data){
+	    						if (data.result > 0) {
+									alert("删除成功");
+									empListJQ();
+								} else {
+									alert("删除失败")
+								}
+	    					}
+	    			);
+				})
+			}
+		};
+    </script>
+</head>
+<body>
+   	<table>
+    	<thead>
+	        <tr>
+	            <th>员工姓名</th>
+	            <th>员工生日</th>
+	            <th>员工电话</th>
+	            <th>所属部门</th>
+	            <th>操作</th>
+	        </tr>
+        </thead>
+        <tbody></tbody>
+   	</table>
+
+    <script>
+        // 修改员工信息
+        function empUpdate(empID){
+        	window.location.href = "emp?action=empServletById&empID="+empID;
+        }
+    </script>
+</body>
+</html>

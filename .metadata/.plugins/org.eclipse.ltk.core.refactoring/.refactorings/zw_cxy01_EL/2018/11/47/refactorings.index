@@ -1,0 +1,6 @@
+1542592546705	Move 'el.jsp' to 'jsp'
+1542592681180	Move 'el.jsp' to 'WebContent'
+1542592711468	Copy compilation unit
+1542593256935	Extract local variable 'session'
+1542593534091	Delete element
+1542598834656	Copy packages

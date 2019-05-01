@@ -1,0 +1,36 @@
+@charset "UTF-8";
+* {
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  width: 100%;
+}
+body {
+  font: 12px '微软雅黑';
+}
+ul {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: #000;
+}
+.clearfix:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+form ul li {
+  margin: 1.5625rem 0;
+  text-align: center;
+}
+form ul li:last-child input {
+  margin: 0 0.78125rem;
+  padding: 0.15625rem 0.78125rem;
+  border-radius: 5px;
+}
+form ul li select {
+  outline: none;
+}

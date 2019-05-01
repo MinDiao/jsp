@@ -1,0 +1,3 @@
+#Tomcat publish data
+#Thu Dec 27 22:56:00 CST 2018
+org.eclipse.jst.jee.server\:20181207=D\:\\Study\\apache-tomcat-8.0.9\\webapps\\20181207
